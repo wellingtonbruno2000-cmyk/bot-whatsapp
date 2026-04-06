@@ -39,6 +39,7 @@ const {
 
 function validateEnv() {
   const missing = [];
+
   if (!VERIFY_TOKEN) missing.push('VERIFY_TOKEN');
   if (!WHATSAPP_TOKEN) missing.push('WHATSAPP_TOKEN');
   if (!PHONE_NUMBER_ID) missing.push('PHONE_NUMBER_ID');
@@ -142,10 +143,7 @@ app.post('/webhook', async (req, res) => {
         return;
       }
     } else {
-      await sendWhatsAppText(
-        phone,
-        'Por enquanto eu entendo texto e áudio.'
-      );
+      await sendWhatsAppText(phone, 'Por enquanto eu entendo texto e áudio.');
       return;
     }
 
