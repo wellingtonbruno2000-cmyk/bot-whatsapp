@@ -16,7 +16,6 @@ const {
   WHATSAPP_TOKEN,
   PHONE_NUMBER_ID,
 } = process.env;
-
 function validateEnv() {
   const missing = [];
   if (!VERIFY_TOKEN) missing.push('VERIFY_TOKEN');
