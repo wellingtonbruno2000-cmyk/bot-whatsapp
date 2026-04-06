@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: whatsapp-finance-bot-premium
-    env: docker
-    plan: starter
-    autoDeploy: true
