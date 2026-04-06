@@ -112,17 +112,14 @@ app.post('/webhook', async (req, res) => {
       ? `🎙️ Entendi do áudio: “${originalText}”\n\n${reply}`
       : reply;
 
+    console.log('Número recebido do WhatsApp:', phone);
+console.log('Resposta que vai enviar:', finalReply);
+    
     await sendWhatsAppText(phone, finalReply);
   } catch (error) {
     console.error('Erro no webhook:', error.response?.data || error.message || error);
     const phone = req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.from;
-    if (phone) {
-      try {
-        await sendWhatsAppText(phone, 'Deu um erro aqui no bot. Me manda de novo em alguns segundos.');
-      } catch (sendError) {
-        console.error('Erro ao enviar mensagem de falha:', sendError.response?.data || sendError.message);
-      }
-    }
+    console.error('Erro no webhook:', error.response?.data || error.message || error);
   }
 });
 
