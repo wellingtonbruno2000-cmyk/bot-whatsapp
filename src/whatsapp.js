@@ -17,7 +17,7 @@ async function sendWhatsAppText(to, body) {
     url,
     {
       messaging_product: 'whatsapp',
-      to: cleanTo,
+      to: "5562981284667",
       type: 'text',
       text: {
         preview_url: false,
