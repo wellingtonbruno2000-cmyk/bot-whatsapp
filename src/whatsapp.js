@@ -8,7 +8,7 @@ const GRAPH_VERSION = 'v23.0';
 async function sendWhatsAppText(to, body) {
   const cleanTo = String(to).replace(/\D/g, '');
 
-  const url = https://graph.facebook.com/${GRAPH_VERSION}/${process.env.PHONE_NUMBER_ID}/messages;
+  const url = 'https://graph.facebook.com/' + GRAPH_VERSION + '/' + process.env.PHONE_NUMBER_ID + '/messages';
 
   console.log('Enviando para:', cleanTo);
   console.log('PHONE_NUMBER_ID:', process.env.PHONE_NUMBER_ID);
