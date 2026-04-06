@@ -6,13 +6,18 @@ const mime = require('mime-types');
 const GRAPH_VERSION = 'v23.0';
 
 async function sendWhatsAppText(to, body) {
-  const url = `https://graph.facebook.com/${GRAPH_VERSION}/${process.env.PHONE_NUMBER_ID}/messages`;
+  const cleanTo = String(to).replace(/\D/g, '');
+
+  const url = https://graph.facebook.com/${GRAPH_VERSION}/${process.env.PHONE_NUMBER_ID}/messages;
+
+  console.log('Enviando para:', cleanTo);
+  console.log('PHONE_NUMBER_ID:', process.env.PHONE_NUMBER_ID);
 
   await axios.post(
     url,
     {
       messaging_product: 'whatsapp',
-      to,
+      to: cleanTo,
       type: 'text',
       text: {
         preview_url: false,
@@ -21,7 +26,7 @@ async function sendWhatsAppText(to, body) {
     },
     {
       headers: {
-        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        Authorization: Bearer ${process.env.WHATSAPP_TOKEN},
         'Content-Type': 'application/json',
       },
     }
