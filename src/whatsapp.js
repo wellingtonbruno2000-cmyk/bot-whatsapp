@@ -26,7 +26,7 @@ async function sendWhatsAppText(to, body) {
     },
     {
       headers: {
-        Authorization: Bearer ${process.env.WHATSAPP_TOKEN},
+        Authorization: 'Bearer ' + process.env.WHATSAPP_TOKEN,
         'Content-Type': 'application/json',
       },
     }
