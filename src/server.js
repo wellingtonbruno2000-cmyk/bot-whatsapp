@@ -2,6 +2,8 @@ require('dotenv').config();
 const fs = require('fs');
 const express = require('express');
 
+console.log('SERVER NOVO SUBIU');
+
 const {
   readDb,
   writeDb,
