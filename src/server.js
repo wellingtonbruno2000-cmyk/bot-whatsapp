@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 
 const {
-  PORT = 3000,
+  PORT = 8080,
   VERIFY_TOKEN,
   OPENAI_API_KEY,
   WHATSAPP_TOKEN,
