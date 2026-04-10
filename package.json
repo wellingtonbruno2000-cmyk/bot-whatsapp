@@ -1,0 +1,20 @@
+{
+  "name": "assessor-whatsapp-bot",
+  "version": "1.0.1",
+  "description": "Bot de WhatsApp com assistente financeiro e agenda pessoal",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "fluent-ffmpeg": "^2.1.3",
+    "googleapis": "^144.0.0",
+    "mime-types": "^2.1.35",
+    "openai": "^4.80.1"
+  }
+}
