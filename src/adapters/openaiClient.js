@@ -7,16 +7,18 @@ const { convertOgaToMp3 } = require('../utils/convertAudio');
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function transcribeAudio(filePath) {
-  if (!process.env.OPENAI_API_KEY) return '';
+  try {
+    const response = await client.audio.transcriptions.create({
+      file: fs.createReadStream(filePath),
+      model: 'gpt-4o-transcribe'
+    });
 
-  let finalPath = filePath;
-  const ext = path.extname(filePath).toLowerCase();
-
-  if (ext === '.oga' || ext === '.ogg') {
-    const mp3Path = filePath.replace(/\.(oga|ogg)$/i, '.mp3');
-    await convertOgaToMp3(filePath, mp3Path);
-    finalPath = mp3Path;
+    return response.text || '';
+  } catch (error) {
+    console.error('Erro ao transcrever áudio:', error);
+    return '';
   }
+}
 
   try {
     const transcript = await client.audio.transcriptions.create({
