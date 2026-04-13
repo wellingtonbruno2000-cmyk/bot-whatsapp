@@ -4,45 +4,40 @@ async function handleMessage(phone, text) {
   const original = String(text || '').trim();
   const msg = original.toLowerCase();
 
-  if (!msg) {
-    return 'Não entendi sua mensagem.';
-  }
+  if (!msg) return 'Não entendi sua mensagem.';
 
-  if (msg === 'oi' || msg === 'ola' || msg === 'olá') {
-    return 'Posso registrar suas finanças. Exemplos: "50 combustível", "entrada 1500 salário", "resumo".';
-  }
-
-  if (msg === 'resumo' || msg === 'resumo hoje') {
+  // =====================================
+  // RESUMO
+  // =====================================
+  if (msg.includes('resumo')) {
     const resumo = getSummary(phone);
 
     const entradas = Number(resumo.income || 0);
     const saidas = Number(resumo.expense || 0);
     const saldo = Number(resumo.balance || 0);
 
-    const situacao =
-      saldo > 0
-        ? 'Situação: saldo positivo.'
-        : saldo < 0
-        ? 'Situação: saldo negativo.'
-        : 'Situação: saldo zerado.';
+    let situacao = 'equilíbrio';
+    if (saldo > 0) situacao = 'positivo';
+    if (saldo < 0) situacao = 'negativo';
 
-    return `📊 Resumo financeiro do dia
+    return `📊 Resumo financeiro
 
 Entradas: R$ ${entradas.toFixed(2).replace('.', ',')}
 Saídas: R$ ${saidas.toFixed(2).replace('.', ',')}
 Saldo: R$ ${saldo.toFixed(2).replace('.', ',')}
 
-${situacao}`;
+Situação: ${situacao}`;
   }
 
-  if (msg.startsWith('entrada ') || msg.startsWith('recebi ')) {
-    const partes = original.split(/\s+/);
-    const valor = Number((partes[1] || '').replace(',', '.'));
-    const categoria = partes.slice(2).join(' ') || 'outros';
+  // =====================================
+  // ENTRADAS (recebi / entrada)
+  // =====================================
+  if (msg.includes('recebi') || msg.startsWith('entrada')) {
+    const match = original.match(/(\d+[.,]?\d*)/);
+    if (!match) return 'Não consegui entender o valor.';
 
-    if (!valor || valor <= 0) {
-      return 'Envie assim: entrada 1500 salário';
-    }
+    const valor = Number(match[1].replace(',', '.'));
+    const categoria = original.replace(match[0], '').replace(/recebi|entrada/i, '').trim() || 'outros';
 
     addFinance(phone, {
       type: 'entrada',
@@ -50,42 +45,20 @@ ${situacao}`;
       description: categoria
     });
 
-    return `✅ Entrada registrada
+    return `💰 Entrada registrada
 
-Valor: R$ ${valor.toFixed(2).replace('.', ',')}
-Categoria: ${categoria}`;
+R$ ${valor.toFixed(2).replace('.', ',')}
+${categoria}`;
   }
 
-  if (msg.startsWith('saida ') || msg.startsWith('saída ')) {
-    const partes = original.split(/\s+/);
-    const valor = Number((partes[1] || '').replace(',', '.'));
-    const categoria = partes.slice(2).join(' ') || 'outros';
+  // =====================================
+  // GASTO AUTOMÁTICO (NÍVEL TOKI)
+  // =====================================
+  const gasto = original.match(/^(\d+[.,]?\d*)\s+(.+)$/);
 
-    if (!valor || valor <= 0) {
-      return 'Envie assim: saida 50 combustível';
-    }
-
-    addFinance(phone, {
-      type: 'saida',
-      amount: valor,
-      description: categoria
-    });
-
-    return `✅ Saída registrada
-
-Valor: R$ ${valor.toFixed(2).replace('.', ',')}
-Categoria: ${categoria}`;
-  }
-
-  const gastoRapido = original.match(/^(\d+[.,]?\d*)\s+(.+)$/);
-
-  if (gastoRapido) {
-    const valor = Number(gastoRapido[1].replace(',', '.'));
-    const categoria = gastoRapido[2].trim();
-
-    if (!valor || valor <= 0) {
-      return 'Não consegui entender o valor.';
-    }
+  if (gasto) {
+    const valor = Number(gasto[1].replace(',', '.'));
+    const categoria = gasto[2];
 
     addFinance(phone, {
       type: 'saida',
@@ -95,11 +68,33 @@ Categoria: ${categoria}`;
 
     return `✅ Gasto registrado
 
-Valor: R$ ${valor.toFixed(2).replace('.', ',')}
-Categoria: ${categoria}`;
+R$ ${valor.toFixed(2).replace('.', ',')}
+${categoria}`;
   }
 
-  return 'Comando não reconhecido. Exemplos: "50 combustível", "entrada 1500 salário", "resumo".';
+  // =====================================
+  // FRASE NATURAL (gastei ...)
+  // =====================================
+  if (msg.includes('gastei')) {
+    const match = original.match(/(\d+[.,]?\d*)/);
+    if (!match) return 'Não consegui entender o valor.';
+
+    const valor = Number(match[1].replace(',', '.'));
+    const categoria = original.replace(match[0], '').replace(/gastei/i, '').trim() || 'outros';
+
+    addFinance(phone, {
+      type: 'saida',
+      amount: valor,
+      description: categoria
+    });
+
+    return `✅ Gasto registrado
+
+R$ ${valor.toFixed(2).replace('.', ',')}
+${categoria}`;
+  }
+
+  return 'Pode me mandar valores tipo: "50 combustível", "gastei 30 almoço", "recebi 500".';
 }
 
 module.exports = { handleMessage };
