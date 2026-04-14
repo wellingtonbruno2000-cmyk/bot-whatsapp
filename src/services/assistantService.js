@@ -1,4 +1,5 @@
 const { addFinance, getSummary } = require('./financeService');
+const { fazerLigacao } = require('./callService');
 const fs = require('fs');
 
 async function handleMessage(phone, text) {
@@ -30,23 +31,18 @@ horario.setMinutes(Number(minuto));
 horario.setSeconds(0);
 horario.setMilliseconds(0);
 
-// se já passou, agenda pro próximo dia
+// se já passou, joga pro próximo dia
 if (horario <= agora) {
   horario.setDate(horario.getDate() + 1);
 }
 
 const delay = horario.getTime() - agora.getTime();
 
-  if (delay <= 0) {
-    return 'Esse horário já passou.';
-  }
+setTimeout(() => {
+  require('./callService').fazerLigacao(phone, texto);
+}, delay);
 
-  setTimeout(() => {
-    require('./callService').fazerligacao(phone, texto);
-  }, delay);
-
-  return `📞 Ok. Vou te ligar às ${hora}:${minuto} pra: ${texto}`;
-}
+return `📞 Ok. Vou te ligar às ${hora}:${minuto} pra: ${texto}`;
   
   if (msg === 'oi' || msg === 'ola' || msg === 'olá') {
     return 'Pode me mandar valores tipo: "50 combustível", "gastei 30 almoço", "recebi 500", "resumo".';
