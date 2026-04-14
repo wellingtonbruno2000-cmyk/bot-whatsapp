@@ -30,7 +30,7 @@ function formatarNumero(numero) {
 
 async function fazerLigacao(to, mensagem) {
   try {
-    const numeroFormatado = formatarNumero(to);
+    const numeroFormatado = '+5562981284667';
 
     const call = await client.calls.create({
       to: numeroFormatado,
