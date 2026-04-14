@@ -9,6 +9,39 @@ async function handleMessage(phone, text) {
     return 'Não entendi sua mensagem.';
   }
 
+ // LEMBRETE COM LIGAÇÃO
+if (msg.includes('me liga')) {
+  const match = msg.match(/(\d{1,2}):(\d{2})/);
+
+  if (!match) {
+    return 'Me fala o horário assim: "me liga 18:30 reunião"';
+  }
+
+  const hora = match[1];
+  const minuto = match[2];
+
+  const texto = msg.split(match[0])[1].trim() || 'Lembrete';
+
+  const agora = new Date();
+  const horario = new Date();
+
+  horario.setHours(hora);
+  horario.setMinutes(minuto);
+  horario.setSeconds(0);
+
+  const delay = horario - agora;
+
+  if (delay <= 0) {
+    return 'Esse horário já passou.';
+  }
+
+  setTimeout(() => {
+    require('./callService').makeCall(phone, texto);
+  }, delay);
+
+  return `📞 Ok. Vou te ligar às ${hora}:${minuto} pra: ${texto}`;
+}
+  
   if (msg === 'oi' || msg === 'ola' || msg === 'olá') {
     return 'Pode me mandar valores tipo: "50 combustível", "gastei 30 almoço", "recebi 500", "resumo".';
   }
