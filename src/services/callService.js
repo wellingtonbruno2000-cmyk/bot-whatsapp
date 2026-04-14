@@ -6,10 +6,23 @@ const client = twilio(
 );
 
 function formatarNumero(numero) {
-  const apenasDigitos = String(numero || '').replace(/\D/g, '');
+  let apenasDigitos = String(numero || '').replace(/\D/g, '');
 
   if (!apenasDigitos) {
     throw new Error('Número inválido para ligação.');
+  }
+
+  // Se não tiver código do país, adiciona Brasil
+  if (!apenasDigitos.startsWith('55')) {
+    apenasDigitos = '55' + apenasDigitos;
+  }
+
+  // Garante que tenha o 9 no celular
+  if (apenasDigitos.length === 12) {
+    // Ex: 5562981284667 -> ok
+  } else if (apenasDigitos.length === 11) {
+    // Ex: 62981284667 -> adiciona 55
+    apenasDigitos = '55' + apenasDigitos;
   }
 
   return `+${apenasDigitos}`;
