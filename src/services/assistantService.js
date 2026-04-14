@@ -1,4 +1,5 @@
 const { addFinance, getSummary } = require('./financeService');
+const { fazerLigacao } = require('./callService');
 
 async function handleMessage(phone, text) {
   const original = String(text || '').trim();
