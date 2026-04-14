@@ -22,14 +22,20 @@ if (msg.includes('me liga')) {
 
   const texto = msg.split(match[0])[1].trim() || 'Lembrete';
 
-  const agora = new Date();
-  const horario = new Date();
+const agora = new Date();
 
-  horario.setHours(hora);
-  horario.setMinutes(minuto);
-  horario.setSeconds(0);
+const horario = new Date();
+horario.setHours(Number(hora));
+horario.setMinutes(Number(minuto));
+horario.setSeconds(0);
+horario.setMilliseconds(0);
 
-  const delay = horario - agora;
+// se já passou, agenda pro próximo dia
+if (horario <= agora) {
+  horario.setDate(horario.getDate() + 1);
+}
+
+const delay = horario.getTime() - agora.getTime();
 
   if (delay <= 0) {
     return 'Esse horário já passou.';
