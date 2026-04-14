@@ -12,38 +12,36 @@ async function handleMessage(phone, text) {
   // 📞 LEMBRETE COM LIGAÇÃO
   // =============================
   if (msg.includes('me liga')) {
-    const match = msg.match(/(\d{1,2}):(\d{2})/);
+  const match = msg.match(/(\d{1,2}):(\d{2})/);
 
-    if (!match) {
-      return 'Me fala o horário assim: "me liga 18:30 reunião"';
-    }
-
-    const hora = Number(match[1]);
-    const minuto = Number(match[2]);
-
-    const texto = msg.split(match[0])[1]?.trim() || 'Lembrete';
-
-    const agora = new Date();
-    const horario = new Date();
-
-    horario.setHours(hora);
-    horario.setMinutes(minuto);
-    horario.setSeconds(0);
-    horario.setMilliseconds(0);
-
-    // 🔥 CORREÇÃO: se já passou, joga pro próximo dia
-    if (horario <= agora) {
-      horario.setDate(horario.getDate() + 1);
-    }
-
-    const delay = horario.getTime() - agora.getTime();
-
-    setTimeout(() => {
-      require('./callService').fazerLigacao(phone, texto);
-    }, delay);
-
-    return `📞 Ok. Vou te ligar às ${hora}:${minuto} pra: ${texto}`;
+  if (!match) {
+    return 'Me fala o horário assim: "me liga 18:30 reunião"';
   }
+
+  const hora = Number(match[1]);
+  const minuto = Number(match[2]);
+  const texto = msg.split(match[0])[1]?.trim() || 'Lembrete';
+
+  const agora = new Date();
+  const horario = new Date();
+
+  horario.setHours(hora);
+  horario.setMinutes(minuto);
+  horario.setSeconds(0);
+  horario.setMilliseconds(0);
+
+  if (horario <= agora) {
+    horario.setDate(horario.getDate() + 1);
+  }
+
+  const delay = horario.getTime() - agora.getTime();
+
+  setTimeout(() => {
+    fazerLigacao(phone, texto);
+  }, delay);
+
+  return `📞 Ok. Vou te ligar às ${String(hora).padStart(2, '0')}:${String(minuto).padStart(2, '0')} pra: ${texto}`;
+}
 
   // =============================
   // 📊 RESUMO
