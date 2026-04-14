@@ -1,5 +1,4 @@
 const { addFinance, getSummary } = require('./financeService');
-const { fazerLigacao } = require('./callService');
 
 async function handleMessage(phone, text) {
   const original = String(text || '').trim();
@@ -37,9 +36,10 @@ async function handleMessage(phone, text) {
 
   const delay = horario.getTime() - agora.getTime();
 
-  setTimeout(() => {
-    fazerLigacao(phone, texto);
-  }, delay);
+  setTimeout(async () => {
+  const { fazerLigacao } = require('./callService');
+  await fazerLigacao(phone, texto);
+}, delay);
 
   return `📞 Ok. Vou te ligar às ${String(hora).padStart(2, '0')}:${String(minuto).padStart(2, '0')} pra: ${texto}`;
 }
