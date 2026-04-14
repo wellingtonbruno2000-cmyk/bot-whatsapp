@@ -42,7 +42,7 @@ app.post('/webhook', async (req, res) => {
     const value = change?.value;
     const message = value?.messages?.[0];
 
-    if (!message || message.from === process.env.BUSINESS_PHONE) return;
+    if (!message) return;
 
     const phone = sanitizePhone(message.from);
     const db = readDb();
@@ -79,7 +79,12 @@ app.post('/webhook', async (req, res) => {
 
     const normalizedText = String(text || '').trim().toLowerCase();
 
-    if (normalizedText === 'ligar agora') {
+    if (
+      normalizedText === 'ligar agora' ||
+      normalizedText === 'me liga agora' ||
+      normalizedText.includes('ligar agora') ||
+      normalizedText.includes('me liga agora')
+    ) {
       const phoneToCall = formatPhoneForCall(phone);
 
       if (!phoneToCall) {
@@ -87,8 +92,12 @@ app.post('/webhook', async (req, res) => {
         return;
       }
 
-      await fazerLigacao(phoneToCall, 'Olá. Este é um teste de ligação do seu assistente.');
-      await sendText(phone, 'Ligação iniciada.');
+      await fazerLigacao(
+        phoneToCall,
+        'Olá. Este é um teste de ligação do seu assistente.'
+      );
+
+      await sendText(phone, '📞 Ligação iniciada. Atende aí!');
       return;
     }
 
