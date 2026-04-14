@@ -28,7 +28,7 @@ async function fazerLigacao(to, mensagem) {
   const call = await client.calls.create({
     to: numeroFormatado,
     from: process.env.TWILIO_PHONE,
-    twiml: `<Response><Say voice="Polly.Vitoria" language="pt-BR">${mensagem}</Say></Response>`
+    twiml: `<Response><Say language="pt-BR">${mensagem}</Say></Response>`
   });
 
   return call.sid;
