@@ -42,7 +42,7 @@ const delay = horario.getTime() - agora.getTime();
   }
 
   setTimeout(() => {
-    require('./callService').makeCall(phone, texto);
+    require('./callService').fazerligacao(phone, texto);
   }, delay);
 
   return `📞 Ok. Vou te ligar às ${hora}:${minuto} pra: ${texto}`;
